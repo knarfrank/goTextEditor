@@ -17,14 +17,7 @@ func appMain(driver gxui.Driver) {
 	window.SetScale(flags.DefaultScaleFactor)
 	window.SetPadding(math.Spacing{L: 10, R: 10, T: 10, B: 10})
 
-	button := theme.CreateButton()
-	button.SetHorizontalAlignment(gxui.AlignCenter)
-	button.SetSizeMode(2)
-	click := func() {
-		fmt.Println("BOOM")
-	}
-	button.SetText("Open File")
-	button.OnClick(func(gxui.MouseEvent) { click() })
+
 
 	text := theme.CreateCodeEditor()
 	text.SetMultiline(true)
@@ -42,12 +35,38 @@ func appMain(driver gxui.Driver) {
 		fmt.Println("Changed")
     })*/
 
-		layout := theme.CreateLinearLayout()
-		layout.SetSizeMode(gxui.Fill)
-		layout.Direction().TopToBottom()
-		layout.AddChild(button)
-		layout.AddChild(text)
+	layout := theme.CreateLinearLayout()
+	layout.SetSizeMode(gxui.Fill)
+	layout.Direction().TopToBottom()
+	layout.AddChild(createToolBar(theme))
+	layout.AddChild(text)
 	window.AddChild(layout)
+}
+
+
+
+func createToolBar(theme gxui.Theme) gxui.LinearLayout {
+	button := theme.CreateButton()
+
+	click := func() {
+		fmt.Println("BOOM")
+	}
+	button.SetText("New File")
+	button.OnClick(func(gxui.MouseEvent) { click() })
+
+	button1 := theme.CreateButton()
+	click1 := func() {
+		fmt.Println("BOOM1")
+	}
+	button1.SetText("Open File")
+	button1.OnClick(func(gxui.MouseEvent) { click1() })
+
+	layout := theme.CreateLinearLayout()
+	layout.SetDirection(gxui.LeftToRight)
+
+	layout.AddChild(button)
+	layout.AddChild(button1)
+	return layout
 }
 
 func main() {
