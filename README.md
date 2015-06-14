@@ -1,2 +1,2 @@
 # goTextEditor
-Text editor written in golang
+Text editor written in golang using gxui
