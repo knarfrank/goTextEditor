@@ -12,7 +12,7 @@ import (
 func appMain(driver gxui.Driver) {
 	theme := dark.CreateTheme(driver)
 
-	window := theme.CreateWindow(500, 250, "Window")
+	window := theme.CreateWindow(500, 250, "goText")
 	window.OnClose(driver.Terminate)
 	window.SetScale(flags.DefaultScaleFactor)
 	window.SetPadding(math.Spacing{L: 10, R: 10, T: 10, B: 10})
