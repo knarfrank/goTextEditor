@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"io/ioutil"
 	"github.com/google/gxui"
 	"github.com/google/gxui/drivers/gl"
 	"github.com/google/gxui/math"
@@ -186,16 +187,23 @@ func appMain(driver gxui.Driver) {
 	layout := theme.CreateLinearLayout()
 	layout.SetSizeMode(gxui.Fill)
 	layout.Direction().TopToBottom()
-	layout.AddChild(createToolBar(driver, theme))
+	layout.AddChild(createToolBar(driver, theme, text))
 	layout.AddChild(text)
 	window.AddChild(layout)
 }
 
-func openFile(path string) {
+func openFile(path string, text gxui.CodeEditor) {
 	fmt.Printf("opening %s", path)
+	dat, err := ioutil.ReadFile(path)
+	if err != nil {
+			panic(err)
+	}
+	text.SetText(string(dat))
+
+
 }
 
-func openFileWindow(driver gxui.Driver, theme gxui.Theme) {
+func openFileWindow(driver gxui.Driver, theme gxui.Theme, text gxui.CodeEditor) {
 	window := theme.CreateWindow(800, 600, "Open file...")
 	window.SetScale(flags.DefaultScaleFactor)
 
@@ -228,7 +236,7 @@ func openFileWindow(driver gxui.Driver, theme gxui.Theme) {
 	open.SetText("Open...")
 	open.OnClick(func(gxui.MouseEvent) {
 		fmt.Printf("File '%s' selected!\n", files.Selected())
-		openFile(files.Selected().(string))
+		openFile(files.Selected().(string), text)
 		window.Close()
 	})
 
@@ -266,7 +274,7 @@ func openFileWindow(driver gxui.Driver, theme gxui.Theme) {
 		} else {
 			fmt.Printf("File '%s' selected!\n", path)
 			window.Close()
-			openFile(path)
+			openFile(path, text)
 		}
 	})
 
@@ -298,7 +306,7 @@ func openFileWindow(driver gxui.Driver, theme gxui.Theme) {
 	window.SetPadding(math.Spacing{L: 10, T: 10, R: 10, B: 10})
 }
 
-func createToolBar(driver gxui.Driver, theme gxui.Theme) gxui.LinearLayout {
+func createToolBar(driver gxui.Driver, theme gxui.Theme, text gxui.CodeEditor) gxui.LinearLayout {
 	button := theme.CreateButton()
 
 	click := func() {
@@ -309,7 +317,7 @@ func createToolBar(driver gxui.Driver, theme gxui.Theme) gxui.LinearLayout {
 
 	button1 := theme.CreateButton()
 	click1 := func() {
-		openFileWindow(driver, theme)
+		openFileWindow(driver, theme,text)
 	}
 	button1.SetText("Open File")
 	button1.OnClick(func(gxui.MouseEvent) { click1() })
